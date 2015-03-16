@@ -1,0 +1,12 @@
+﻿html {
+	height:100%;
+}
+body {
+	height:100%;
+	width:auto;
+    font-family:'メイリオ','Meiryo','ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','ＭＳ Ｐゴシック','MS PGothic',Osaka,sans-serif;
+    -webkit-font-smoothing:antialiased;
+            font-smooth:always;   
+	background-color: #f9f9f9;	                	           	
+} 
+

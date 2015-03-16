@@ -1,0 +1,30 @@
+﻿/* over-ride */
+.alertify-log {
+    color: #fff;
+    background-color: #3276b1;
+    border-color: #285e8e;	
+}
+
+.alertify-log-error {
+    color: #fff;
+    background-color: #d2322d;
+    border-color: #ac2925;		
+}
+
+.alertify-log-success {
+    color: #fff;
+    background-color: #f0ad4e;
+    border-color: #eea236;
+}
+
+.alertify-log,
+.alertify-log-error
+.alertify-log-success {
+    font-family:'メイリオ','Meiryo','ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','ＭＳ Ｐゴシック','MS PGothic',Osaka,sans-serif;
+    -webkit-font-smoothing:antialiased;
+            font-smooth:always;
+    font-size: 14px;  
+	text-shadow: none;
+	border: 1px solid;
+	border-radius: 4px;          
+}

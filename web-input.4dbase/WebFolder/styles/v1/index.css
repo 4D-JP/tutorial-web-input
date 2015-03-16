@@ -1,0 +1,25 @@
+.product-code {
+	margin-bottom: 20px;
+}
+
+.product-qrcode {
+    text-align:center;
+}
+
+.product-qrcode img {
+    display:inline-block;
+    border:none;
+    margin:0 5px
+}
+
+.product-count {
+    text-align:center;
+    color: transparent;
+    text-shadow: 0 0 0 gray;
+    ime-mode:disabled;
+    white-space: pre-wrap;      /* CSS3 */   
+    white-space: -moz-pre-wrap; /* Firefox */    
+    white-space: -pre-wrap;     /* Opera <7 */   
+    white-space: -o-pre-wrap;   /* Opera 7 */    
+    word-wrap: break-word;      /* IE */		 	
+}

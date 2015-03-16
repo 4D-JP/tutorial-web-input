@@ -1,0 +1,10 @@
+﻿/* over-ride */
+.modal-footer {
+	text-align: center;
+	margin-top: 0;
+	padding: 14px 14px 14px 14px;
+}
+
+#modal-dialog-display-button {
+	display:none;
+}
