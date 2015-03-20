@@ -85,13 +85,15 @@ WEB SET HTTP HEADER($headerNames;$headerValues)
 
 *オブジェクト型のレスポンス*
 
-4Dは，本質的にデータサーバーですから，リクエストに対して完全なWebページを送信するよりも，最小限のデータをJSONフォーマットで返すことに専念し，ブラウザ側でHTMLを動的に更新したほうがスマートです。v14以降，オブジェクト型の変数や配列がサポートされるようになりました。また[```WEB SEND TEXT```](http://doc.4d.com/4Dv14/4D/14.3/WEB-SEND-TEXT.301-1697692.ja.html)は，Content-Typeが指定できるように改定なりました。（第2引数は，かつてコンテキストモードのためのものでしたが，同モードはv12で廃止されています。）
+4Dは，本質的にデータサーバーですから，リクエストに対して完全なWebページを送信するよりも，最小限のデータをJSONフォーマットで返すことに専念し，ブラウザ側でHTMLを動的に更新したほうがスマートです。v14以降，オブジェクト型の変数や配列がサポートされるようになりました。また[```WEB SEND TEXT```](http://doc.4d.com/4Dv14/4D/14.3/WEB-SEND-TEXT.301-1697692.ja.html)は，Content-Typeが指定できるように改定されたので，テキストを直接```application/json```として返すことができます。（第2引数は，かつてコンテキストモードのためのものでしたが，同モードはv12で廃止されています。）
 
 ```
 OB SET($response;"code";[Product]code)
 OB SET($response;"count";[Product]count)
 OB SET($response;"message";"在庫を登録しました。")
 OB SET($response;"status";"OK")
+
+WEB SEND TEXT(JSON Stringify($response);"application/json")
 ```
 
 そのようなJSONオブジェクトは，容易にブラウザ側で処理することができます。
