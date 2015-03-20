@@ -30,7 +30,7 @@ Webからデータベースを更新する方法を学ぶことができます�
 
 *ローカルIPv4アドレスを取得する*
 
-Internet Commandsの[```IT_MyTCPAddr```](http://doc.4d.com/4Dv14/4D-Internet-Commands/14/IT-MyTCPAddr.301-1237736.ja.html)でも取得できますが，今回は```LAUNCH EXTERNAL PROCESS```を使用しています。
+Internet Commandsの[```IT_MyTCPAddr```](http://doc.4d.com/4Dv14/4D-Internet-Commands/14/IT-MyTCPAddr.301-1237736.ja.html)でも取得できますが，今回は```LAUNCH EXTERNAL PROCESS```を使用しました。
 
 ```
 C_TEXT($0)
@@ -62,6 +62,25 @@ Else
   End if 
 
 End if 
+```
+
+*サーバー名を隠匿する*
+
+デフォルトは```4D/14.0.3```ですが，これを```WEB SET HTTP HEADER```でオーバーライドすることもできます。もっとも，スタティックHTTPサーバーから自動的に配信されるCSS/HTML/JS/画像などは，この限りではありません。それらのファイルも```On Web Connection```で処理すれば，同じように```Server```HTTPヘッダーを任意の文字列で置き換えることができます。
+
+```
+ARRAY TEXT($headerNames;3)
+ARRAY TEXT($headerValues;3)
+
+$headerNames{1}:="X-VERSION"
+$headerNames{2}:="X-STATUS"
+$headerNames{3}:="Server"
+
+$headerValues{1}:="HTTP/1.0"
+$headerValues{2}:="200 OK"
+$headerValues{3}:="Simple Web Server"  //now possible to over-ride
+
+WEB SET HTTP HEADER($headerNames;$headerValues)
 ```
 
 
