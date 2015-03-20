@@ -30,7 +30,7 @@ Webからデータベースを更新する方法を学ぶことができます�
 
 *ローカルIPv4アドレスを取得する*
 
-Internet Commandsの[```IT_MyTCPAddr```](http://doc.4d.com/4Dv14/4D-Internet-Commands/14/IT-MyTCPAddr.301-1237736.ja.html)でも取得できますが，今回は```LAUNCH EXTERNAL PROCESS```を使用しました。
+Internet Commandsの[```IT_MyTCPAddr```](http://doc.4d.com/4Dv14/4D-Internet-Commands/14/IT-MyTCPAddr.301-1237736.ja.html)でも取得できますが，今回は[```LAUNCH EXTERNAL PROCESS```](http://doc.4d.com/4Dv14/4D/14.3/LAUNCH-EXTERNAL-PROCESS.301-1697524.ja.html)を使用しました。
 
 ```
 C_TEXT($0)
@@ -66,7 +66,7 @@ End if
 
 *サーバー名を隠匿する*
 
-デフォルトは```4D/14.0.3```ですが，これを```WEB SET HTTP HEADER```でオーバーライドすることもできます。もっとも，スタティックHTTPサーバーから自動的に配信されるCSS/HTML/JS/画像などは，この限りではありません。それらのファイルも```On Web Connection```で処理すれば，同じように```Server```HTTPヘッダーを任意の文字列で置き換えることができます。
+デフォルトは```4D/14.0.3```ですが，これを[```WEB SET HTTP HEADER```](http://doc.4d.com/4Dv14/4D/14.3/WEB-SET-HTTP-HEADER.301-1697696.ja.html)でオーバーライドすることもできます。もっとも，スタティックHTTPサーバーから自動的に配信されるCSS/HTML/JS/画像などは，この限りではありません。それらのファイルも[```On Web Connection```](http://doc.4d.com/4Dv14/4D/14.3/On-Web-Connection-database-method.301-1696629.ja.html)で処理すれば，同じように```Server```HTTPヘッダーを任意の文字列で置き換えることができます。
 
 ```
 ARRAY TEXT($headerNames;3)
@@ -83,4 +83,33 @@ $headerValues{3}:="Simple Web Server"  //now possible to over-ride
 WEB SET HTTP HEADER($headerNames;$headerValues)
 ```
 
+*オブジェクト型のレスポンス*
 
+4Dは，本質的にデータサーバーですから，リクエストに対して完全なWebページを送信するよりも，最小限のデータをJSONフォーマットで返すことに専念し，ブラウザ側でHTMLを動的に更新したほうがスマートです。v14以降，オブジェクト型の変数や配列がサポートされるようになりました。また[```WEB SEND TEXT```](http://doc.4d.com/4Dv14/4D/14.3/WEB-SEND-TEXT.301-1697692.ja.html)は，Content-Typeが指定できるように改定なりました。（第2引数は，かつてコンテキストモードのためのものでしたが，同モードはv12で廃止されています。）
+
+```
+C_OBJECT($response)
+OB SET($response;"code";[Product]code)
+OB SET($response;"count";[Product]count)
+OB SET($response;"message";"在庫を更新しました。")
+
+WEB SEND TEXT(JSON Stringify($response);"application/json")
+```
+
+そのようなJSONオブジェクトは，容易にブラウザ側で処理することができます。
+
+```js
+e.preventDefault();
+if(this.val().length){
+  $.post('/product/update', {code:this.val(), count:1}, (function(data){            
+    this.val('');                    
+    if(data.status == 'OK'){
+      a.success(data.message);
+      productCount$.text(data.count);
+    }else{
+      a.error(data.message);
+      productCount$.text('');
+    }                    
+  }).bind(this));            
+} 
+```
