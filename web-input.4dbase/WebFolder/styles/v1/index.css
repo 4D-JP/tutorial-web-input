@@ -13,6 +13,11 @@
     color: #999999;
 }
 
+.logout-button {
+    margin-top: 6px;
+    float: right;
+}
+
 .product-count {
     text-align: center;
     color: transparent;
