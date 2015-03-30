@@ -282,4 +282,44 @@ Else
 End if
 ```
 
+ログアウト用のURLをOn Web Connectionに追加します。
+
+```
+If (WEB Is secured connection)
+   //...
+Else
+  Case of 
+    //...
+    : (Match regex("^/logout/$";$1))
+
+     WEB CLOSE SESSION(WWW_SESSION_ID)
+
+     ARRAY TEXT($headerNames;0)
+     ARRAY TEXT($headerValues;0)
+
+     APPEND TO ARRAY($headerNames;"X-STATUS")
+     APPEND TO ARRAY($headerValues;"401 Unauthorized")
+     
+  End case
+End if
+```
+
+ログアウト後のステータスコードは200ではなく，401になるので，クライアント側は```$.get()```ではなく，```$.ajax()```を使用します。
+
+```
+var logoutButton$ = $('#logout-button');
+    
+    logoutButton$
+    .click(function(e){
+         $.ajax({
+             type: 'GET',
+             url: '/logout/',
+             async: true,
+             complete: function(request, status){
+                 window.location = '/';
+             }
+        })
+    })
+```
+
 
