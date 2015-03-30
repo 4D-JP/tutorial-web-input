@@ -130,3 +130,56 @@ if(this.val().length){
 まとめ
 ---
 v14を使用すれば，4Dデータベースに対するWebアクセスを簡単に実現することができます。**オブジェクト型**でリクエストやレスポンスを処理することができるからです。画面の外観や動作などは，積極的に**フレームワーク**や**ライブラリ**を活用し，4DはJSON形式のデータオブジェクトを受け渡しすることに専念させるのがベストです。
+
+追記
+---
+ログインの仕組み
+
+ユーザーを管理するためのテーブルを用意します。4Dには，簡易的なユーザー＆グループの仕組み（ツールボックス）も用意されていますが，ここでは使用しません。
+
+パスワードはそのままデータベースに登録するのではなく，ハッシュ値が保存されるよう，トリガにコードを記述します。
+
+```
+$event:=Trigger event
+
+Case of 
+: ($event=On Saving Existing Record Event)\
+ | ($event=On Saving New Record Event)
+
+[User]pass:=Generate digest([User]pass;4D digest)
+
+End case 
+```
+
+On Startupで自動セッション管理を有効にします。データベース設定でも同じことができます。
+
+```
+WEB SET OPTION(Web keep session;1)
+WEB SET OPTION(Web log recording;1)
+
+WEB START SERVER
+```
+
+自己署名SSL証明書を作成し，ストラクチャファイルと同じ階層に置きます。証明書の作り方は，[doc.wakanda.org](http://doc.wakanda.org/home2.ja.html#/Wakanda-Server/Wakanda-Server/SSLTLS.300-952181.ja.html)などのWebサイトを参考にしてください。
+
+SSL以外の接続は，SSLにリダイレクトするよう，On Web Connectionにコードを追加します。
+
+```
+If (WEB Is secured connection)
+   //...
+Else
+
+  C_LONGINT($sslPortId)
+  WEB GET OPTION(Web HTTPS port ID;$sslPortId)
+
+  ARRAY TEXT($headerNames;0)
+  ARRAY TEXT($headerValues;0)
+  
+  APPEND TO ARRAY($headerNames;"X-STATUS")
+  APPEND TO ARRAY($headerValues;"302 Found")
+
+  APPEND TO ARRAY($headerNames;"Location")
+  APPEND TO ARRAY($headerValues;"https://"+  $4+Choose($sslPortId=443;"";":"+String($sslPortId))) 
+
+End if
+```
