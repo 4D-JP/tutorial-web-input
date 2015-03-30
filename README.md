@@ -133,7 +133,7 @@ v14を使用すれば，4Dデータベースに対するWebアクセスを簡単
 
 追記
 ---
-ログインの仕組み
+*ログインの仕組み*
 
 ユーザーを管理するためのテーブルを用意します。4Dには，簡易的なユーザー＆グループの仕組み（ツールボックス）も用意されていますが，ここでは使用しません。
 
@@ -144,12 +144,14 @@ $event:=Trigger event
 
 Case of 
 : ($event=On Saving Existing Record Event)\
- | ($event=On Saving New Record Event)
+  | ($event=On Saving New Record Event)
 
-[User]pass:=Generate digest([User]pass;4D digest)
+  [User]pass:=Generate digest([User]pass;4D digest)
 
 End case 
 ```
+
+*セッション管理*
 
 On Startupで自動セッション管理を有効にします。データベース設定でも同じことができます。
 
@@ -159,6 +161,8 @@ WEB SET OPTION(Web log recording;1)
 
 WEB START SERVER
 ```
+
+*SSL*
 
 自己署名SSL証明書を作成し，ストラクチャファイルと同じ階層に置きます。証明書の作り方は，[doc.wakanda.org](http://doc.wakanda.org/home2.ja.html#/Wakanda-Server/Wakanda-Server/SSLTLS.300-952181.ja.html)などのWebサイトを参考にしてください。
 
