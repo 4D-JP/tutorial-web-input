@@ -187,3 +187,77 @@ Else
 
 End if
 ```
+*ユーザー認証（クライアント側）*
+
+ログイン用のフォームを用意し，ユーザー名やパスワードがログイン用のURLにPOSTされるようにスクリプトを記述します。
+
+```js
+var loginButton$ = $('#login-button');
+    
+    loginButton$
+    .click((function(e){
+        e.preventDefault();
+        
+        $.post('/login/', $("#login-form").serialize(), (function(data){
+            
+            if(data.success == true){
+                window.location = '/product/';
+            }else{
+                displayAlert(data.message, '閉じる');
+            } 
+            
+        }).bind(this));
+
+    }).bind(loginButton$)) 
+```
+
+*ユーザー認証（サーバー側）*
+
+ログインを許可したプロセスは，プロセス変数にセッション情報を代入します。自動セッション管理により，このWebプロセスはセッションが終了するまで存続します。
+
+```
+C_OBJECT($response)
+
+WWW_SESSION_ID:=""
+
+C_TEXT($WWW_USER;$WWW_PASS)
+
+ARRAY TEXT($names;0)
+ARRAY TEXT($values;0)
+WEB GET VARIABLES($names;$values)
+
+$find:=Find in array($names;"WWW_USER")
+
+If ($find#-1)
+  $WWW_USER:=Replace string($values{$find};"@";"";*)
+End if 
+
+$find:=Find in array($names;"WWW_PASS")
+
+If ($find#-1)
+  $WWW_PASS:=$values{$find}
+End if 
+
+READ ONLY([User])
+
+QUERY([User];[User]name=$WWW_USER)
+
+OB SET($response;"success";False)
+OB SET($response;"message";"ユーザー名またはパスワードが間違っています。")
+
+If (Is record loaded([User]))
+
+  If (Generate digest($WWW_PASS;4D digest)=[User]pass)
+
+    WWW_SESSION_ID:=WEB Get Current Session ID
+    OB SET($response;"success";True)
+    OB SET($response;"userName";[User]name)
+    OB REMOVE($response;"message")
+
+  End if 
+
+End if 
+
+WEB SEND TEXT(JSON Stringify($response);"application/json")
+```
+
