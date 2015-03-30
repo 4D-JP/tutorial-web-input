@@ -260,4 +260,26 @@ End if
 
 WEB SEND TEXT(JSON Stringify($response);"application/json")
 ```
+セッション管理用のプロセス変数に値の代入されていないプロセスは，ログイン画面にリダイレクトするよう，On Web Connectionにコードを追加します。
+
+```
+If (WEB Is secured connection)
+   //...
+Else
+  Case of 
+    //...
+    : (WWW_SESSION_ID="")
+
+     ARRAY TEXT($headerNames;0)
+     ARRAY TEXT($headerValues;0)
+
+     APPEND TO ARRAY($headerNames;"X-STATUS")
+     APPEND TO ARRAY($headerValues;"302 Found")
+
+     APPEND TO ARRAY($headerNames;"Location")
+     APPEND TO ARRAY($headerValues;"/login/") 
+  End case
+End if
+```
+
 
