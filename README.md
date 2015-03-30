@@ -321,5 +321,6 @@ var logoutButton$ = $('#logout-button');
         })
     })
 ```
+![](https://github.com/4D-JP/tutorial-web-input/blob/master/images/4.png)
 
-
+![](https://github.com/4D-JP/tutorial-web-input/blob/master/images/5.png)
